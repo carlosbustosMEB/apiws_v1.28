@@ -31,7 +31,7 @@
          <div class="input-group mb-3">
             <input id="input-session" type="text" class="form-control" aria-describedby="btn-qr-g" disabled
                value="{{instanceName}}">
-            <button id="gen-qrcode" class="btn btn-success" type="submit">Generate qrcode</button>
+            <button id="gen-qrcode" class="btn btn-success" type="submit">Generate QR code</button>
          </div>
          <div id="qrcode-img"></div>
       </div>
@@ -48,16 +48,18 @@
 
       $('#gen-qrcode').click(() => {
 
-         const header = '{{type}}' === 'apikey'
-            ? { apikey: '{{auth.apikey}}' }
-            : { authorization: 'Bearer {{auth.jwt}}' };
-         
-         log({header})
-         return
+         // const header = '{{type}}' === 'apikey'
+         //   ? { apikey: '{{auth.apikey}}' }
+         //   : { authorization: 'Bearer {{auth.jwt}}' };
+
+         const header = { authorization: 'Bearer {{auth.jwt}}' };
+
+         //log({ header })
+         //return
 
          $.ajax({
             url: `/instance/connect/{{instanceName}}`,
-            headers,
+            headers: header,
             type: 'GET',
             success: (qrcode, status) => {
                $(`#update-qrcode`).remove();
