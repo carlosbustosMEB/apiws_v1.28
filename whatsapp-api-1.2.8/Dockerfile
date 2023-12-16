@@ -5,6 +5,7 @@ RUN apt update -y
 RUN apt upgrade -y
 RUN apt install -y git
 RUN npm install -g npm
+RUN npm install pm2 -g
 
 ### BUILD IMAGE
 FROM base AS builder
@@ -15,8 +16,10 @@ COPY ./package.json .
 
 RUN npm install
 
+
 COPY ./tsconfig.json .
 COPY ./src ./src
+COPY ./views ./views
 COPY ./public ./public
 
 RUN npm run build
@@ -93,7 +96,7 @@ ENV WEBHOOK_EVENTS_NEW_JWT_TOKEN=false
 ENV CONFIG_SESSION_PHONE_CLIENT='CodeChat'
 ENV CONFIG_SESSION_PHONE_NAME='Chrome'
 
-ENV QRCODE_LIMIT=6
+ENV QRCODE_LIMIT=10
 
 ENV AUTHENTICATION_TYPE='jwt'
 ENV AUTHENTICATION_API_KEY='zYzP7ocstxh3SJ23D4FZTCu4ehnM8v4hu'
@@ -104,5 +107,6 @@ EXPOSE 8083
 
 # All settings must be in the env.yml file, passed as a volume to the container
 
-CMD [ "node", "./src/main.js" ]
+#CMD [ "node", "./src/main.js" ]
+CMD ["pm2-runtime", "./src/main.js"]
 
